@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strudel MIDI Drum Pad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Audio Context Enable Overlay -->
+    <div id="enable-sound-overlay" class="overlay hidden">
+      <div class="overlay-content">
+        <h2>Enable Sound</h2>
+        <p>Click to enable audio playback</p>
+        <button id="enable-sound-btn" class="btn-primary">Enable Sound</button>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Settings</h2>
+          <button id="close-settings" class="btn-close">×</button>
+        </div>
+        <div class="modal-body">
+          <label for="sound-bank">Sound Bank:</label>
+          <select id="sound-bank">
+            <option value="tr909">TR-909</option>
+            <option value="tr808">TR-808</option>
+            <option value="acoustic">Acoustic</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button id="apply-settings" class="btn-primary">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-container">
+      <!-- Header -->
+      <header class="app-header">
+        <h1>STRUDEL DRUM PAD</h1>
+        <div class="header-controls">
+          <button id="settings-btn" class="btn-secondary">SETTINGS</button>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Transport Controls -->
+        <div class="transport-controls">
+          <button id="play-btn" class="btn-transport">PLAY</button>
+          <button id="stop-btn" class="btn-transport">STOP</button>
+          <div class="bpm-control">
+            <label for="bpm-input">BPM:</label>
+            <input
+              type="number"
+              id="bpm-input"
+              min="60"
+              max="200"
+              value="120"
+            />
+          </div>
+        </div>
+
+        <!-- Drum Pad Grid -->
+        <div class="drum-pad-container">
+          <div class="drum-grid">
+            <!-- Row 1: 1234 -->
+            <div class="pad" data-key="1" data-sound="bd" data-label="BD">
+              1
+            </div>
+            <div class="pad" data-key="2" data-sound="sd" data-label="SD">
+              2
+            </div>
+            <div class="pad" data-key="3" data-sound="hh" data-label="HH">
+              3
+            </div>
+            <div class="pad" data-key="4" data-sound="oh" data-label="OH">
+              4
+            </div>
+
+            <!-- Row 2: QWER -->
+            <div class="pad" data-key="q" data-sound="rim" data-label="RIM">
+              Q
+            </div>
+            <div class="pad" data-key="w" data-sound="clap" data-label="CLAP">
+              W
+            </div>
+            <div class="pad" data-key="e" data-sound="lt" data-label="LT">
+              E
+            </div>
+            <div class="pad" data-key="r" data-sound="mt" data-label="MT">
+              R
+            </div>
+
+            <!-- Row 3: ASDF -->
+            <div class="pad" data-key="a" data-sound="ht" data-label="HT">
+              A
+            </div>
+            <div class="pad" data-key="s" data-sound="cr" data-label="CR">
+              S
+            </div>
+            <div class="pad" data-key="d" data-sound="cy" data-label="CY">
+              D
+            </div>
+            <div class="pad" data-key="f" data-sound="cb" data-label="CB">
+              F
+            </div>
+
+            <!-- Row 4: ZXCV -->
+            <div class="pad" data-key="z" data-sound="perc" data-label="PERC">
+              Z
+            </div>
+            <div class="pad" data-key="x" data-sound="rd" data-label="RD">
+              X
+            </div>
+            <div class="pad" data-key="c" data-sound="click" data-label="CLICK">
+              C
+            </div>
+            <div
+              class="pad"
+              data-key="v"
+              data-sound="tambourine"
+              data-label="TAMB"
+            >
+              V
+            </div>
+          </div>
+        </div>
+
+        <!-- Strudel Code Editor -->
+        <div class="editor-container">
+          <div class="editor-header">
+            <h3>STRUDEL PATTERN EDITOR</h3>
+            <div class="editor-controls">
+              <button id="clear-pattern" class="btn-secondary">CLEAR</button>
+              <button id="reset-pattern" class="btn-secondary">RESET</button>
+            </div>
+          </div>
+          <textarea id="code-editor" class="code-editor" spellcheck="false">
+$: s("hh*4, bd sd").bank("tr909")</textarea
+          >
+        </div>
+      </main>
+
+      <!-- Toast Notifications -->
+      <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- Strudel Web -->
+    <script src="https://unpkg.com/@strudel/web"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

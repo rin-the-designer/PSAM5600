@@ -1,0 +1,442 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "IBM Plex Mono", monospace;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  line-height: 1.4;
+  overflow-x: hidden;
+}
+
+/* Container and layout */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+  border-bottom: 3px solid #333;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.control-btn {
+  background: #000;
+  color: #fff;
+  border: 3px solid #fff;
+  padding: 10px 20px;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.control-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+.control-btn:active {
+  transform: translateY(1px);
+}
+
+.control-btn.active {
+  background: #00ff00;
+  color: #000;
+  border-color: #00ff00;
+}
+
+.bpm-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bpm-control label {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.bpm-control input {
+  background: #000;
+  color: #fff;
+  border: 3px solid #fff;
+  padding: 8px 12px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  width: 80px;
+}
+
+.bpm-control input:focus {
+  outline: none;
+  border-color: #00ff00;
+}
+
+/* Main content layout */
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Pad section */
+.pad-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pad-mode-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #000;
+  border: 3px solid #333;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.pad-mode-indicator.active {
+  border-color: #00ff00;
+}
+
+#pad-mode-status {
+  color: #666;
+}
+
+#pad-mode-status.active {
+  color: #00ff00;
+}
+
+.pad-mode-btn {
+  background: transparent;
+  color: #666;
+  border: 2px solid #333;
+  padding: 4px 8px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.pad-mode-btn:hover {
+  color: #fff;
+  border-color: #666;
+}
+
+.pad-mode-btn.active {
+  color: #00ff00;
+  border-color: #00ff00;
+}
+
+/* Drum pad grid */
+.drum-pad-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 20px;
+  background: #000;
+  border: 4px solid #333;
+  position: relative;
+}
+
+.drum-pad-grid:focus {
+  outline: none;
+  border-color: #00ff00;
+}
+
+.pad {
+  aspect-ratio: 1;
+  background: #222;
+  border: 3px solid #444;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.05s ease;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  min-height: 80px;
+  user-select: none;
+}
+
+.pad:hover {
+  background: #333;
+  border-color: #666;
+}
+
+.pad:active,
+.pad.active {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+  transform: scale(0.95);
+}
+
+.pad.triggered {
+  background: #00ff00;
+  color: #000;
+  border-color: #00ff00;
+  animation: padHit 0.1s ease;
+}
+
+@keyframes padHit {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pad-key {
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.pad-sound {
+  font-size: 8px;
+  opacity: 0.5;
+  margin-top: 2px;
+}
+
+/* Key mapping display */
+.key-mapping {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10px;
+  opacity: 0.5;
+  text-align: center;
+}
+
+.mapping-row {
+  display: flex;
+  justify-content: space-between;
+  letter-spacing: 8px;
+}
+
+/* Editor section */
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.editor-section h3 {
+  font-size: 16px;
+  font-weight: 700;
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+}
+
+.strudel-editor {
+  background: #000;
+  border: 3px solid #333;
+  min-height: 300px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  color: #fff;
+  padding: 20px;
+}
+
+.pattern-info {
+  padding: 15px;
+  background: #111;
+  border: 2px solid #333;
+  font-size: 12px;
+}
+
+#current-pattern {
+  color: #00ff00;
+  font-weight: 700;
+}
+
+/* Audio enable overlay */
+.audio-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.audio-overlay.hidden {
+  display: none;
+}
+
+.enable-audio-btn {
+  background: #000;
+  color: #fff;
+  border: 4px solid #fff;
+  padding: 20px 40px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.enable-audio-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* Settings modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #1a1a1a;
+  border: 4px solid #fff;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 3px solid #333;
+}
+
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #666;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: #666;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.setting-item label {
+  font-weight: 700;
+  min-width: 120px;
+}
+
+.setting-item input[type="range"] {
+  flex: 1;
+  height: 6px;
+  background: #333;
+  outline: none;
+}
+
+.setting-item input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  cursor: pointer;
+  border: 2px solid #000;
+}
+
+.setting-item span {
+  min-width: 40px;
+  font-weight: 700;
+  color: #00ff00;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .controls {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .drum-pad-grid {
+    padding: 10px;
+    gap: 4px;
+  }
+
+  .pad {
+    min-height: 60px;
+    font-size: 10px;
+  }
+}

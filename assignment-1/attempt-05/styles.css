@@ -1,0 +1,367 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "IBM Plex Mono", monospace;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  line-height: 1.4;
+  overflow-x: hidden;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #333333;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #00ff00;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.bpm-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bpm-control label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.bpm-control input {
+  background-color: #1a1a1a;
+  border: 2px solid #333333;
+  color: #ffffff;
+  padding: 8px 12px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  width: 80px;
+  text-align: center;
+}
+
+.bpm-control input:focus {
+  outline: none;
+  border-color: #00ff00;
+}
+
+/* Buttons */
+.play-btn,
+.stop-btn,
+.settings-btn {
+  background-color: #1a1a1a;
+  border: 2px solid #333333;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.play-btn:hover,
+.stop-btn:hover,
+.settings-btn:hover {
+  border-color: #00ff00;
+  color: #00ff00;
+}
+
+.play-btn.active {
+  background-color: #00ff00;
+  color: #0a0a0a;
+  border-color: #00ff00;
+}
+
+.stop-btn {
+  border-color: #ff0000;
+}
+
+.stop-btn:hover {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+
+/* Main content */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+/* Drum Pad Grid */
+.drum-pad-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 1;
+}
+
+.pad {
+  background-color: #1a1a1a;
+  border: 3px solid #333333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  position: relative;
+  user-select: none;
+}
+
+.pad:hover {
+  border-color: #555555;
+  background-color: #222222;
+}
+
+.pad.active {
+  background-color: #00ff00;
+  border-color: #00ff00;
+  color: #0a0a0a;
+  transform: scale(0.95);
+}
+
+.pad .key-label {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.pad .sound-label {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* Code Display */
+.code-display {
+  width: 100%;
+  max-width: 800px;
+  background-color: #1a1a1a;
+  border: 2px solid #333333;
+  padding: 20px;
+}
+
+.code-display h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  color: #00ff00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.code-output {
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  background-color: #0a0a0a;
+  padding: 15px;
+  border: 1px solid #333333;
+  font-family: "IBM Plex Mono", monospace;
+  min-height: 60px;
+  word-break: break-all;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  background-color: #1a1a1a;
+  margin: 5% auto;
+  padding: 0;
+  border: 2px solid #333333;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 2px solid #333333;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #00ff00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #ff0000;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.setting-group {
+  margin-bottom: 20px;
+}
+
+.setting-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.setting-group select,
+.setting-group input[type="range"] {
+  width: 100%;
+  background-color: #0a0a0a;
+  border: 2px solid #333333;
+  color: #ffffff;
+  padding: 10px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+}
+
+.setting-group select:focus,
+.setting-group input[type="range"]:focus {
+  outline: none;
+  border-color: #00ff00;
+}
+
+.setting-group input[type="range"] {
+  padding: 0;
+  height: 40px;
+}
+
+#volume-value {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 14px;
+  color: #00ff00;
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 2px solid #333333;
+  text-align: right;
+}
+
+.save-btn {
+  background-color: #00ff00;
+  border: 2px solid #00ff00;
+  color: #0a0a0a;
+  padding: 10px 20px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.save-btn:hover {
+  background-color: #0a0a0a;
+  color: #00ff00;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .drum-pad-grid {
+    max-width: 400px;
+  }
+
+  .pad .key-label {
+    font-size: 16px;
+  }
+
+  .pad .sound-label {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .drum-pad-grid {
+    max-width: 300px;
+  }
+
+  .pad .key-label {
+    font-size: 14px;
+  }
+
+  .pad .sound-label {
+    font-size: 9px;
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "strudel-drum-pad",
+  "version": "1.0.0",
+  "description": "Web-based MIDI drum pad using Strudel Web package",
+  "main": "app.js",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000"
+  },
+  "keywords": [
+    "strudel",
+    "drums",
+    "audio",
+    "web-audio",
+    "midi"
+  ],
+  "author": "Student",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

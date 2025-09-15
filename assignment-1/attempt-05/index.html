@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strudel MIDI Drum Pad</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>STRUDEL DRUM PAD</h1>
+        <div class="controls">
+          <div class="bpm-control">
+            <label for="bpm">BPM:</label>
+            <input type="number" id="bpm" value="120" min="60" max="200" />
+          </div>
+          <button id="play-btn" class="play-btn">PLAY</button>
+          <button id="stop-btn" class="stop-btn">STOP</button>
+          <button id="settings-btn" class="settings-btn">SETTINGS</button>
+        </div>
+      </header>
+
+      <main class="main">
+        <div class="drum-pad-grid">
+          <!-- Row 1 -->
+          <div class="pad" data-key="1" data-sound="bd">
+            <span class="key-label">1</span>
+            <span class="sound-label">BD</span>
+          </div>
+          <div class="pad" data-key="2" data-sound="sd">
+            <span class="key-label">2</span>
+            <span class="sound-label">SD</span>
+          </div>
+          <div class="pad" data-key="3" data-sound="hh">
+            <span class="key-label">3</span>
+            <span class="sound-label">HH</span>
+          </div>
+          <div class="pad" data-key="4" data-sound="oh">
+            <span class="key-label">4</span>
+            <span class="sound-label">OH</span>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="pad" data-key="q" data-sound="cp">
+            <span class="key-label">Q</span>
+            <span class="sound-label">CP</span>
+          </div>
+          <div class="pad" data-key="w" data-sound="rs">
+            <span class="key-label">W</span>
+            <span class="sound-label">RS</span>
+          </div>
+          <div class="pad" data-key="e" data-sound="cb">
+            <span class="key-label">E</span>
+            <span class="sound-label">CB</span>
+          </div>
+          <div class="pad" data-key="r" data-sound="ch">
+            <span class="key-label">R</span>
+            <span class="sound-label">CH</span>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="pad" data-key="a" data-sound="lt">
+            <span class="key-label">A</span>
+            <span class="sound-label">LT</span>
+          </div>
+          <div class="pad" data-key="s" data-sound="mt">
+            <span class="key-label">S</span>
+            <span class="sound-label">MT</span>
+          </div>
+          <div class="pad" data-key="d" data-sound="ht">
+            <span class="key-label">D</span>
+            <span class="sound-label">HT</span>
+          </div>
+          <div class="pad" data-key="f" data-sound="op">
+            <span class="key-label">F</span>
+            <span class="sound-label">OP</span>
+          </div>
+
+          <!-- Row 4 -->
+          <div class="pad" data-key="z" data-sound="cr">
+            <span class="key-label">Z</span>
+            <span class="sound-label">CR</span>
+          </div>
+          <div class="pad" data-key="x" data-sound="ri">
+            <span class="key-label">X</span>
+            <span class="sound-label">RI</span>
+          </div>
+          <div class="pad" data-key="c" data-sound="sh">
+            <span class="key-label">C</span>
+            <span class="sound-label">SH</span>
+          </div>
+          <div class="pad" data-key="v" data-sound="ag">
+            <span class="key-label">V</span>
+            <span class="sound-label">AG</span>
+          </div>
+        </div>
+
+        <div class="code-display">
+          <h3>STRUDEL CODE:</h3>
+          <div id="code-output" class="code-output">
+            $: s("bd sd").bank("tr909")
+          </div>
+        </div>
+      </main>
+
+      <!-- Settings Modal -->
+      <div id="settings-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>SETTINGS</h2>
+            <button id="close-settings" class="close-btn">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="setting-group">
+              <label for="sound-bank">Sound Bank:</label>
+              <select id="sound-bank">
+                <option value="tr909">TR-909</option>
+                <option value="tr808">TR-808</option>
+                <option value="dmc">DMC</option>
+                <option value="dmc2">DMC2</option>
+                <option value="dmc3">DMC3</option>
+                <option value="dmc4">DMC4</option>
+                <option value="dmc5">DMC5</option>
+                <option value="dmc6">DMC6</option>
+                <option value="dmc7">DMC7</option>
+                <option value="dmc8">DMC8</option>
+                <option value="dmc9">DMC9</option>
+                <option value="dmc10">DMC10</option>
+                <option value="dmc11">DMC11</option>
+                <option value="dmc12">DMC12</option>
+                <option value="dmc13">DMC13</option>
+                <option value="dmc14">DMC14</option>
+                <option value="dmc15">DMC15</option>
+                <option value="dmc16">DMC16</option>
+                <option value="dmc17">DMC17</option>
+                <option value="dmc18">DMC18</option>
+                <option value="dmc19">DMC19</option>
+                <option value="dmc20">DMC20</option>
+              </select>
+            </div>
+            <div class="setting-group">
+              <label for="volume">Volume:</label>
+              <input type="range" id="volume" min="0" max="100" value="80" />
+              <span id="volume-value">80%</span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="save-settings" class="save-btn">SAVE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load Strudel Web package -->
+    <script src="https://unpkg.com/@strudel/web@1.2.5"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MIDI Drum Pad - Strudel Web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Enable Sound Overlay -->
+    <div id="enable-sound-overlay" class="overlay hidden">
+      <div class="overlay-content">
+        <h2>ENABLE SOUND</h2>
+        <button id="enable-sound-btn" class="control-btn">
+          ACTIVATE AUDIO
+        </button>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>SETTINGS</h2>
+          <button id="close-settings" class="close-btn">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-group">
+            <label for="volume-control">VOLUME</label>
+            <input
+              type="range"
+              id="volume-control"
+              min="0"
+              max="100"
+              value="75"
+            />
+            <span id="volume-display">75%</span>
+          </div>
+          <div class="setting-group">
+            <label for="sensitivity-control">PAD SENSITIVITY</label>
+            <input
+              type="range"
+              id="sensitivity-control"
+              min="1"
+              max="10"
+              value="5"
+            />
+            <span id="sensitivity-display">5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <header class="header">
+        <h1>DRUM PAD</h1>
+        <div class="pad-mode-indicator">
+          <span id="pad-mode-status">PAD MODE: OFF</span>
+          <button id="pad-mode-toggle" class="mode-toggle-btn">
+            TOGGLE PAD MODE
+          </button>
+        </div>
+      </header>
+
+      <div class="main-content">
+        <div class="left-panel">
+          <div class="drum-pad-container">
+            <div class="drum-pad-grid" id="drum-pad-grid" tabindex="0">
+              <!-- Row 1: 1234 -->
+              <div class="pad" data-key="1" data-sound="bd" data-label="BD">
+                <span class="pad-label">1<br />KICK</span>
+              </div>
+              <div class="pad" data-key="2" data-sound="sd" data-label="SD">
+                <span class="pad-label">2<br />SNARE</span>
+              </div>
+              <div class="pad" data-key="3" data-sound="hh" data-label="HH">
+                <span class="pad-label">3<br />HIHAT</span>
+              </div>
+              <div class="pad" data-key="4" data-sound="oh" data-label="OH">
+                <span class="pad-label">4<br />OPEN HH</span>
+              </div>
+
+              <!-- Row 2: qwer -->
+              <div class="pad" data-key="q" data-sound="cy" data-label="CY">
+                <span class="pad-label">Q<br />CYMBAL</span>
+              </div>
+              <div class="pad" data-key="w" data-sound="rm" data-label="RM">
+                <span class="pad-label">W<br />RIM</span>
+              </div>
+              <div class="pad" data-key="e" data-sound="cl" data-label="CL">
+                <span class="pad-label">E<br />CLAP</span>
+              </div>
+              <div class="pad" data-key="r" data-sound="cp" data-label="CP">
+                <span class="pad-label">R<br />COWBELL</span>
+              </div>
+
+              <!-- Row 3: asdf -->
+              <div class="pad" data-key="a" data-sound="mt" data-label="MT">
+                <span class="pad-label">A<br />MID TOM</span>
+              </div>
+              <div class="pad" data-key="s" data-sound="lt" data-label="LT">
+                <span class="pad-label">S<br />LOW TOM</span>
+              </div>
+              <div class="pad" data-key="d" data-sound="ht" data-label="HT">
+                <span class="pad-label">D<br />HIGH TOM</span>
+              </div>
+              <div class="pad" data-key="f" data-sound="cr" data-label="CR">
+                <span class="pad-label">F<br />CRASH</span>
+              </div>
+
+              <!-- Row 4: zxcv -->
+              <div class="pad" data-key="z" data-sound="perc" data-label="PERC">
+                <span class="pad-label">Z<br />PERC</span>
+              </div>
+              <div
+                class="pad"
+                data-key="x"
+                data-sound="tabla"
+                data-label="TABLA"
+              >
+                <span class="pad-label">X<br />TABLA</span>
+              </div>
+              <div
+                class="pad"
+                data-key="c"
+                data-sound="bongo"
+                data-label="BONGO"
+              >
+                <span class="pad-label">C<br />BONGO</span>
+              </div>
+              <div
+                class="pad"
+                data-key="v"
+                data-sound="conga"
+                data-label="CONGA"
+              >
+                <span class="pad-label">V<br />CONGA</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button id="play-btn" class="control-btn">PLAY</button>
+            <button id="stop-btn" class="control-btn">STOP</button>
+            <div class="bpm-control">
+              <label for="bpm-input">BPM</label>
+              <input
+                type="number"
+                id="bpm-input"
+                min="60"
+                max="200"
+                value="120"
+              />
+            </div>
+            <button id="settings-btn" class="control-btn">SETTINGS</button>
+          </div>
+        </div>
+
+        <div class="right-panel">
+          <div class="pattern-editor-container">
+            <div class="panel-header">
+              <h3>PATTERN EDITOR</h3>
+              <button id="clear-pattern" class="control-btn small">
+                CLEAR
+              </button>
+            </div>
+            <textarea
+              id="pattern-editor"
+              class="pattern-editor"
+              placeholder="Enter Strudel pattern here..."
+              spellcheck="false"
+            >
+$: s("hh*4, bd sd")</textarea
+            >
+            <div class="pattern-info">
+              <p>Hit pads to build pattern • Press ESC to exit pad mode</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load Strudel Web -->
+    <script src="https://unpkg.com/@strudel.cycles/web@0.11.0"></script>
+    <script>
+      // Initialize Strudel immediately after loading
+      if (typeof initStrudel !== "undefined") {
+        initStrudel({
+          prebake: () => samples("github:tidalcycles/dirt-samples"),
+        });
+      }
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>

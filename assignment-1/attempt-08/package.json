@@ -1,0 +1,17 @@
+{
+  "name": "strudel-drum-pad",
+  "version": "1.0.0",
+  "description": "Web-based MIDI drum pad using Strudel Web",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@strudel/web": "^1.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

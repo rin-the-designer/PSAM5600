@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strudel Drum Pad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="enable-sound-overlay" class="overlay hidden">
+      <div class="overlay-content">
+        <h2>Enable Sound</h2>
+        <p>Click to enable audio playback</p>
+        <button id="enable-sound-btn" class="enable-sound-button">
+          Enable Sound
+        </button>
+      </div>
+    </div>
+
+    <div class="app-container">
+      <header class="app-header">
+        <h1 class="app-title">STRUDEL DRUM PAD</h1>
+        <div class="header-controls">
+          <div class="pad-mode-indicator">
+            <label class="pad-mode-toggle">
+              <input type="checkbox" id="pad-mode-checkbox" />
+              <span class="toggle-slider"></span>
+              PAD MODE
+            </label>
+            <div id="pad-mode-status" class="mode-status">OFF</div>
+          </div>
+          <button id="settings-btn" class="icon-button">⚙️</button>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <section class="drum-section">
+          <div class="drum-pad-container">
+            <div class="drum-pad-grid" id="drum-pad-grid" tabindex="0">
+              <!-- Row 1: 1234 - BD → SD → HH → OH -->
+              <div class="pad" data-key="1" data-sound="bd" data-label="BD">
+                <div class="pad-label">BD</div>
+                <div class="pad-key">1</div>
+              </div>
+              <div class="pad" data-key="2" data-sound="sd" data-label="SD">
+                <div class="pad-label">SD</div>
+                <div class="pad-key">2</div>
+              </div>
+              <div class="pad" data-key="3" data-sound="hh" data-label="HH">
+                <div class="pad-label">HH</div>
+                <div class="pad-key">3</div>
+              </div>
+              <div class="pad" data-key="4" data-sound="oh" data-label="OH">
+                <div class="pad-label">OH</div>
+                <div class="pad-key">4</div>
+              </div>
+
+              <!-- Row 2: QWER - CR → RIM → CP → CB -->
+              <div class="pad" data-key="q" data-sound="cr" data-label="CR">
+                <div class="pad-label">CR</div>
+                <div class="pad-key">Q</div>
+              </div>
+              <div class="pad" data-key="w" data-sound="rim" data-label="RIM">
+                <div class="pad-label">RIM</div>
+                <div class="pad-key">W</div>
+              </div>
+              <div class="pad" data-key="e" data-sound="cp" data-label="CP">
+                <div class="pad-label">CP</div>
+                <div class="pad-key">E</div>
+              </div>
+              <div class="pad" data-key="r" data-sound="cb" data-label="CB">
+                <div class="pad-label">CB</div>
+                <div class="pad-key">R</div>
+              </div>
+
+              <!-- Row 3: ASDF - MT → LT → HT → RD -->
+              <div class="pad" data-key="a" data-sound="mt" data-label="MT">
+                <div class="pad-label">MT</div>
+                <div class="pad-key">A</div>
+              </div>
+              <div class="pad" data-key="s" data-sound="lt" data-label="LT">
+                <div class="pad-label">LT</div>
+                <div class="pad-key">S</div>
+              </div>
+              <div class="pad" data-key="d" data-sound="ht" data-label="HT">
+                <div class="pad-label">HT</div>
+                <div class="pad-key">D</div>
+              </div>
+              <div class="pad" data-key="f" data-sound="rd" data-label="RD">
+                <div class="pad-label">RD</div>
+                <div class="pad-key">F</div>
+              </div>
+
+              <!-- Row 4: ZXCV - PERC → SH → TB → MISC -->
+              <div class="pad" data-key="z" data-sound="perc" data-label="PERC">
+                <div class="pad-label">PERC</div>
+                <div class="pad-key">Z</div>
+              </div>
+              <div class="pad" data-key="x" data-sound="sh" data-label="SH">
+                <div class="pad-label">SH</div>
+                <div class="pad-key">X</div>
+              </div>
+              <div class="pad" data-key="c" data-sound="tb" data-label="TB">
+                <div class="pad-label">TB</div>
+                <div class="pad-key">C</div>
+              </div>
+              <div class="pad" data-key="v" data-sound="misc" data-label="MISC">
+                <div class="pad-label">MISC</div>
+                <div class="pad-key">V</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls-section">
+            <div class="transport-controls">
+              <button id="play-btn" class="control-button play-btn">
+                PLAY
+              </button>
+              <button id="stop-btn" class="control-button stop-btn">
+                STOP
+              </button>
+              <div class="bpm-control">
+                <label for="bpm-input">BPM</label>
+                <input
+                  type="number"
+                  id="bpm-input"
+                  min="60"
+                  max="200"
+                  value="120"
+                  class="bpm-input"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pattern-section">
+          <div class="pattern-editor-container">
+            <div class="pattern-header">
+              <h3>PATTERN EDITOR</h3>
+              <button id="clear-pattern-btn" class="clear-button">CLEAR</button>
+            </div>
+            <textarea
+              id="pattern-editor"
+              class="pattern-editor"
+              placeholder='$: s("hh*4, bd sd")'
+              spellcheck="false"
+            >
+$: s("hh*4, bd sd")</textarea
+            >
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>SETTINGS</h2>
+          <button id="close-settings-btn" class="close-button">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-group">
+            <label for="volume-slider">VOLUME</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="volume-slider"
+                min="0"
+                max="100"
+                value="75"
+                class="slider"
+              />
+              <span id="volume-value" class="slider-value">75%</span>
+            </div>
+          </div>
+          <div class="setting-group">
+            <label for="sensitivity-slider">PAD SENSITIVITY</label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="sensitivity-slider"
+                min="0"
+                max="100"
+                value="50"
+                class="slider"
+              />
+              <span id="sensitivity-value" class="slider-value">50%</span>
+            </div>
+          </div>
+          <div class="setting-group">
+            <h4>SAMPLE LIBRARY</h4>
+            <div class="sample-info">
+              Local samples loaded from <code>samples/</code> directory
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load Strudel Web CDN -->
+    <script src="https://unpkg.com/@strudel/web@1.2.5"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
