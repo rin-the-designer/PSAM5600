@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BLACKPINK Lyrics Analysis</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
+    <link rel="stylesheet" href="style/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Controls Section -->
+      <section class="controls">
+        <input
+          type="text"
+          id="searchBox"
+          class="search-box"
+          placeholder="Search for words..."
+        />
+        <div class="filters">
+          <div class="filter-group">
+            <label for="sortBy">Sort</label>
+            <select id="sortBy">
+              <option value="frequency">Frequency ↑</option>
+              <option value="frequency-asc">Frequency ↓</option>
+              <option value="alphabetical">A-Z</option>
+              <option value="alphabetical-desc">Z-A</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="minFrequency">Frequency</label>
+            <select id="minFrequency">
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="5">5+</option>
+              <option value="10">10+</option>
+              <option value="20">20+</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="language">Language</label>
+            <select id="language">
+              <option value="all">All</option>
+              <option value="korean">Korean</option>
+              <option value="english">English</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="member">Member</label>
+            <select id="member">
+              <option value="all">All</option>
+              <option value="Jisoo">Jisoo</option>
+              <option value="Jennie">Jennie</option>
+              <option value="Rosé">Rosé</option>
+              <option value="Lisa">Lisa</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content -->
+      <main class="word-count-section">
+        <div id="wordCountContainer" class="word-count-grid">
+          <div class="loading">Loading word count data...</div>
+        </div>
+      </main>
+
+      <!-- Overview Side Panel -->
+      <aside id="defaultSidePanel" class="word-detail-panel">
+        <header class="word-detail-header">
+          <h2>Overview</h2>
+        </header>
+        <div class="word-detail-content">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Words</div>
+              <div class="stat-number" id="totalWords">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Unique Words</div>
+              <div class="stat-number" id="uniqueWords">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Songs</div>
+              <div class="stat-number" id="totalSongs">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Albums</div>
+              <div class="stat-number" id="totalAlbums">0</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <script>
+      // Constants
+      const BLACKPINK_MEMBERS = ["Jisoo", "Jennie", "Rosé", "Lisa"];
+      // State
+      let wordCountData = {};
+      let allWords = [];
+      let filteredWords = [];
+      let lyricsData = null;
+      let selectedWord = null;
+
+      // Utility Functions
+      const isKorean = (text) => /[\u3131-\u3163\uac00-\ud7a3]/.test(text);
+
+      const tokenizeText = (text) =>
+        text
+          .toLowerCase()
+          .replace(/[.!?,:;()]/g, "") // Remove punctuation but preserve ALL apostrophes
+          .split(/\s+/)
+          .filter((word) => word.length > 0);
+
+      // Data Loading
+      async function loadLyricsData() {
+        try {
+          const response = await fetch("lyrics_member.json");
+          const data = await response.json();
+          lyricsData = data;
+
+          processData(data);
+          updateStats(data);
+          renderWords();
+        } catch (error) {
+          console.error("Error loading lyrics data:", error);
+          document.getElementById("wordCountContainer").innerHTML =
+            '<div class="no-results">Error loading lyrics data. Please ensure lyrics_member.json is available.</div>';
+        }
+      }
+
+      function processData(data) {
+        let totalWords = 0;
+
+        data.albums.forEach((album) => {
+          album.songs.forEach((song) => {
+            song.lyrics.forEach((lyric) => {
+              const words = tokenizeText(lyric.text);
+              words.forEach((word) => {
+                wordCountData[word] = (wordCountData[word] || 0) + 1;
+                totalWords++;
+              });
+            });
+          });
+        });
+
+        allWords = Object.entries(wordCountData)
+          .map(([word, count]) => ({ word, count }))
+          .sort((a, b) => b.count - a.count);
+
+        filteredWords = [...allWords];
+      }
+
+      function updateStats(data) {
+        document.getElementById("totalWords").textContent = allWords
+          .reduce((sum, w) => sum + w.count, 0)
+          .toLocaleString();
+        document.getElementById("uniqueWords").textContent =
+          allWords.length.toLocaleString();
+        document.getElementById("totalSongs").textContent = data.albums.reduce(
+          (sum, album) => sum + album.songs.length,
+          0
+        );
+        document.getElementById("totalAlbums").textContent = data.albums.length;
+      }
+
+      // Rendering
+      function renderWords() {
+        const container = document.getElementById("wordCountContainer");
+
+        if (filteredWords.length === 0) {
+          container.innerHTML =
+            '<div class="no-results">No words found matching your criteria.</div>';
+          return;
+        }
+
+        container.innerHTML = filteredWords
+          .map(
+            ({ word, count }) => `
+          <div class="word-item" data-word="${word}">
+            <span class="word-text">${word}</span>
+            <sup class="word-count">${count}</sup>
+          </div>
+        `
+          )
+          .join("");
+
+        // Add click event listeners
+        container.querySelectorAll(".word-item").forEach((item) => {
+          item.addEventListener("click", () =>
+            showWordDetails(item.dataset.word, item)
+          );
+        });
+      }
+
+      // Filtering & Sorting
+      function filterAndSortWords() {
+        const searchTerm = document
+          .getElementById("searchBox")
+          .value.toLowerCase();
+        const sortBy = document.getElementById("sortBy").value;
+        const minFrequency = parseInt(
+          document.getElementById("minFrequency").value
+        );
+        const language = document.getElementById("language").value;
+        const member = document.getElementById("member").value;
+
+        // Create filtered words based on member-specific counts or all words
+        const wordsToFilter =
+          member !== "all" ? getMemberSpecificWords(member) : allWords;
+
+        filteredWords = wordsToFilter.filter(({ word, count }) => {
+          // Search filter
+          if (searchTerm && !word.includes(searchTerm)) return false;
+
+          // Frequency filter
+          if (count < minFrequency) return false;
+
+          // Language filter
+          if (language !== "all") {
+            const isKoreanWord = isKorean(word);
+            if (language === "korean" && !isKoreanWord) return false;
+            if (language === "english" && isKoreanWord) return false;
+          }
+
+          // BLACKPINK member filter
+          if (!checkWordInBlackpinkLyrics(word)) return false;
+
+          return true;
+        });
+
+        // Sort results
+        switch (sortBy) {
+          case "frequency":
+            filteredWords.sort((a, b) => b.count - a.count);
+            break;
+          case "frequency-asc":
+            filteredWords.sort((a, b) => a.count - b.count);
+            break;
+          case "alphabetical":
+            filteredWords.sort((a, b) => a.word.localeCompare(b.word));
+            break;
+          case "alphabetical-desc":
+            filteredWords.sort((a, b) => b.word.localeCompare(a.word));
+            break;
+        }
+
+        renderWords();
+      }
+
+      // Word Analysis Functions
+      function getMemberSpecificWords(member) {
+        if (!lyricsData) return [];
+
+        const memberWordCounts = {};
+
+        lyricsData.albums.forEach((album) => {
+          album.songs.forEach((song) => {
+            song.lyrics.forEach((lyric) => {
+              const lyricMember = Array.isArray(lyric.member)
+                ? lyric.member
+                : [lyric.member];
+
+              if (lyricMember.includes(member)) {
+                const words = tokenizeText(lyric.text);
+                words.forEach((word) => {
+                  memberWordCounts[word] = (memberWordCounts[word] || 0) + 1;
+                });
+              }
+            });
+          });
+        });
+
+        return Object.entries(memberWordCounts)
+          .map(([word, count]) => ({ word, count }))
+          .sort((a, b) => b.count - a.count);
+      }
+
+      function checkWordInMemberLyrics(word, member) {
+        if (!lyricsData) return false;
+
+        const searchWord = word.toLowerCase();
+        return lyricsData.albums.some((album) =>
+          album.songs.some((song) =>
+            song.lyrics.some((lyric) => {
+              const lyricMember = Array.isArray(lyric.member)
+                ? lyric.member
+                : [lyric.member];
+              if (lyricMember.includes(member)) {
+                const words = tokenizeText(lyric.text);
+                return words.includes(searchWord);
+              }
+              return false;
+            })
+          )
+        );
+      }
+
+      function checkWordInBlackpinkLyrics(word) {
+        if (!lyricsData) return false;
+
+        const searchWord = word.toLowerCase();
+        return lyricsData.albums.some((album) =>
+          album.songs.some((song) =>
+            song.lyrics.some((lyric) => {
+              const lyricMember = Array.isArray(lyric.member)
+                ? lyric.member
+                : [lyric.member];
+              const hasBlackpinkMember = lyricMember.some((member) =>
+                BLACKPINK_MEMBERS.includes(member)
+              );
+
+              if (hasBlackpinkMember) {
+                const words = tokenizeText(lyric.text);
+                return words.includes(searchWord);
+              }
+              return false;
+            })
+          )
+        );
+      }
+
+      // Word Details Panel
+      function showWordDetails(word, clickedItem) {
+        // Remove selection from all items
+        document
+          .querySelectorAll(".word-item")
+          .forEach((item) => item.classList.remove("selected"));
+        clickedItem.classList.add("selected");
+
+        // Hide existing panels
+        hideAllWordPanels();
+
+        // Create new panel
+        const panel = createWordDetailPanel(word);
+        document.body.appendChild(panel);
+
+        // Adjust layout
+        const mainContent = document.querySelector(".container");
+        mainContent.style.marginRight = "400px";
+
+        // Add close handler
+        panel.querySelector(".close-button").addEventListener("click", () => {
+          // Clear word selection
+          document
+            .querySelectorAll(".word-item")
+            .forEach((item) => item.classList.remove("selected"));
+          panel.remove();
+          // Reset to default panel margin (for overview panel)
+          mainContent.style.marginRight = "400px";
+        });
+
+        // Populate data
+        populateWordDetails(word, panel);
+      }
+
+      function createWordDetailPanel(word) {
+        const panel = document.createElement("div");
+        panel.className = "word-detail-panel";
+        panel.innerHTML = `
+        <header class="word-detail-header">
+          <h2>${word}</h2>
+          <button class="close-button">×</button>
+        </header>
+        <div class="word-detail-content">
+          <div class="detail-section">
+            <h3>Per Member</h3>
+            <div class="detail-grid member-stats"></div>
+          </div>
+          <div class="detail-section">
+            <h3>Per Album</h3>
+            <div class="detail-grid album-stats"></div>
+          </div>
+          <div class="detail-section">
+            <h3>Per Song</h3>
+            <div class="detail-grid song-stats"></div>
+          </div>
+        </div>
+      `;
+        return panel;
+      }
+
+      function hideAllWordPanels() {
+        document
+          .querySelectorAll(".word-detail-panel:not(#defaultSidePanel)")
+          .forEach((panel) => panel.remove());
+        document.querySelector(".container").style.marginRight = "0";
+      }
+
+      function populateWordDetails(word, panel) {
+        if (!lyricsData) return;
+
+        const searchWord = word.toLowerCase();
+        const stats = { member: {}, album: {}, song: {} };
+
+        lyricsData.albums.forEach((album) => {
+          album.songs.forEach((song) => {
+            song.lyrics.forEach((lyric) => {
+              const words = tokenizeText(lyric.text);
+              const wordCount = words.filter((w) => w === searchWord).length;
+
+              if (wordCount > 0) {
+                const members = Array.isArray(lyric.member)
+                  ? lyric.member
+                  : [lyric.member];
+                const hasBlackpinkMember = members.some((member) =>
+                  BLACKPINK_MEMBERS.includes(member)
+                );
+
+                if (hasBlackpinkMember) {
+                  // Count per member (BLACKPINK only)
+                  members.forEach((member) => {
+                    if (BLACKPINK_MEMBERS.includes(member)) {
+                      stats.member[member] =
+                        (stats.member[member] || 0) + wordCount;
+                    }
+                  });
+
+                  // Count per category
+                  stats.album[album.album_name] =
+                    (stats.album[album.album_name] || 0) + wordCount;
+                  stats.song[song.song_title] =
+                    (stats.song[song.song_title] || 0) + wordCount;
+                }
+              }
+            });
+          });
+        });
+
+        // Render stats with custom sorting
+        renderMemberStats(panel.querySelector(".member-stats"), stats.member);
+        renderAlbumStats(
+          panel.querySelector(".album-stats"),
+          stats.album,
+          lyricsData
+        );
+        renderSongStats(
+          panel.querySelector(".song-stats"),
+          stats.song,
+          lyricsData
+        );
+      }
+
+      function renderDetailGrid(container, stats) {
+        container.innerHTML = Object.entries(stats)
+          .filter(([key, value]) => value > 0)
+          .sort((a, b) => b[1] - a[1])
+          .map(
+            ([key, value]) => `
+          <div class="detail-item">
+            <span class="detail-label">${key}</span>
+            <span class="detail-count">${value}</span>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      // Custom render functions with specific sorting
+      function renderMemberStats(container, memberStats) {
+        const BLACKPINK_MEMBERS = [
+          { name: "Jisoo", image: "artist/jisoo.jpg" },
+          { name: "Jennie", image: "artist/jennie.jpg" },
+          { name: "Rosé", image: "artist/rose.jpg" },
+          { name: "Lisa", image: "artist/lisa.jpg" },
+        ];
+
+        container.innerHTML = BLACKPINK_MEMBERS.map((member) => {
+          const count = memberStats[member.name] || 0;
+          return `
+            <div class="detail-item">
+              <div class="member-info">
+                <img src="${member.image}" alt="${member.name}" class="member-image" />
+                <span class="detail-label">${member.name}</span>
+              </div>
+              <span class="detail-count">${count}</span>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderAlbumStats(container, albumStats, lyricsData) {
+        container.innerHTML = lyricsData.albums
+          .map((album) => album)
+          .sort((a, b) => parseInt(b.year) - parseInt(a.year)) // Descending by year
+          .filter((album) => albumStats[album.album_name] > 0)
+          .map(
+            (album) => `
+            <div class="detail-item">
+              <div class="album-info">
+                <img src="${album.cover_image}" alt="${
+              album.album_name
+            }" class="album-image" />
+                <span class="detail-label">${album.album_name}</span>
+              </div>
+              <span class="detail-count">${albumStats[album.album_name]}</span>
+            </div>
+          `
+          )
+          .join("");
+      }
+
+      function renderSongStats(container, songStats, lyricsData) {
+        const songData = [];
+
+        // Create songs array with album order and track order
+        lyricsData.albums
+          .sort((a, b) => parseInt(b.year) - parseInt(a.year)) // Albums by year desc
+          .forEach((album) => {
+            album.songs.forEach((song, index) => {
+              if (songStats[song.song_title] > 0) {
+                songData.push({
+                  title: song.song_title,
+                  count: songStats[song.song_title],
+                  albumName: album.album_name,
+                  albumYear: album.year,
+                  albumImage: album.cover_image,
+                  trackOrder: index,
+                });
+              }
+            });
+          });
+
+        container.innerHTML = songData
+          .map(
+            (song) => `
+            <div class="detail-item">
+              <div class="song-info">
+                <img src="${song.albumImage}" alt="${song.albumName}" class="song-image" />
+                <span class="detail-label">${song.title}</span>
+              </div>
+              <span class="detail-count">${song.count}</span>
+            </div>
+          `
+          )
+          .join("");
+      }
+
+      // Panel Management
+      function setupDefaultPanel() {
+        const mainContent = document.querySelector(".container");
+        mainContent.style.marginRight = "400px";
+      }
+
+      // Event Listeners
+      document
+        .getElementById("searchBox")
+        .addEventListener("input", filterAndSortWords);
+      document
+        .getElementById("sortBy")
+        .addEventListener("change", filterAndSortWords);
+      document
+        .getElementById("minFrequency")
+        .addEventListener("change", filterAndSortWords);
+      document
+        .getElementById("language")
+        .addEventListener("change", filterAndSortWords);
+      document
+        .getElementById("member")
+        .addEventListener("change", filterAndSortWords);
+
+      // Auto Dark Mode based on System Preference
+      function initDarkMode() {
+        const body = document.documentElement;
+
+        // Function to detect system theme preference
+        function detectSystemTheme() {
+          return window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+
+        // Set initial theme based on system preference
+        const systemTheme = detectSystemTheme();
+        body.setAttribute("data-theme", systemTheme);
+
+        // Listen for system theme changes
+        if (window.matchMedia) {
+          window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", (e) => {
+              const newTheme = e.matches ? "dark" : "light";
+              body.setAttribute("data-theme", newTheme);
+            });
+        }
+      }
+
+      // Initialize
+      initDarkMode();
+      setupDefaultPanel();
+      loadLyricsData();
+    </script>
+  </body>
+</html>
