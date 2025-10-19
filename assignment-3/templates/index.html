@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text to 😀</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <form id="emojiForm">
+        <div class="input-group">
+          <textarea
+            id="textInput"
+            placeholder="Type your text here..."
+            autocomplete="off"
+            required
+            rows="1"
+          ></textarea>
+          <button type="submit" id="convertBtn">⏎</button>
+        </div>
+      </form>
+
+      <div id="loading" class="loading" style="display: none">
+        <div class="spinner"></div>
+        <p>Converting...</p>
+      </div>
+
+      <div id="result" class="result" style="display: none">
+        <div id="emojiOutput" class="emoji-output"></div>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("emojiForm");
+      const textInput = document.getElementById("textInput");
+      const loading = document.getElementById("loading");
+      const result = document.getElementById("result");
+      const emojiOutput = document.getElementById("emojiOutput");
+
+      // Handle Enter key press in textarea
+      textInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          form.dispatchEvent(new Event("submit"));
+        }
+      });
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const text = textInput.value.trim();
+        if (!text) return;
+
+        // Show loading, hide result
+        loading.style.display = "flex";
+        result.style.display = "none";
+
+        try {
+          const response = await fetch("/convert", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: text }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            emojiOutput.textContent = data.emojis;
+            result.style.display = "flex";
+          } else {
+            emojiOutput.textContent =
+              "Error: " + (data.error || "Something went wrong");
+            result.style.display = "flex";
+          }
+        } catch (error) {
+          emojiOutput.textContent = "Error: Failed to connect to server";
+          result.style.display = "flex";
+        } finally {
+          loading.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>
